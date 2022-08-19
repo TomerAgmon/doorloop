@@ -27,7 +27,7 @@ const shuffledWords = WORD_BANK.sort(() => Math.random() - Math.random()).join(
   " "
 );
 
-const GAME_TIME = 10;
+const GAME_TIME = 60;
 
 function App() {
   const [isGameOver, setIsGameOver] = useState(false);
@@ -41,17 +41,17 @@ function App() {
 
   return (
     <Container>
-      {!isGameOver && (
-        <Timer seconds={GAME_TIME} onTimerEnded={handleGameOver} />
-      )}
       {isGameOver ? (
         <Statistics typos={typos} correctCount={correctCount} />
       ) : (
-        <TypeTest
-          currChar={currChar}
-          trailingText={trailingText}
-          leadingText={leadingText}
-        />
+        <>
+          <Timer seconds={GAME_TIME} onTimerEnded={handleGameOver} />
+          <TypeTest
+            currChar={currChar}
+            trailingText={trailingText}
+            leadingText={leadingText}
+          />
+        </>
       )}
     </Container>
   );

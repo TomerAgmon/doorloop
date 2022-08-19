@@ -1,38 +1,27 @@
-import styled from "styled-components";
-import { useState, useEffect, useRef } from "react";
-import { WORD_BANK } from "./../word-bank";
-import { useTypeTest } from "../hooks/useTypeTest";
-
-const TestContainer = styled.div({
-  display: "flex",
-  height: "95%",
-});
-
-const CurrChar = styled.span({
-  textDecoration: "underline",
-  background: "green",
-});
-
-const LeadingText = styled.span({
-  opacity: 0.7,
-});
+import { useTypeTest } from "./../hooks/useTypeTest";
+import * as S from "./styled";
+import { WordStates } from "./word";
 
 interface TypeTestProps {
-  currChar: string;
-  trailingText: string;
-  leadingText: string;
+  words: { [key: string]: WordStates };
 }
 
-export function TypeTest({
-  currChar,
-  trailingText,
-  leadingText,
-}: TypeTestProps) {
+export function TypeTest({ words }: TypeTestProps) {
+  const { inputText, handleKeyDown } = useTypeTest(words);
+
   return (
-    <p>
-      <LeadingText>{leadingText}</LeadingText>
-      <CurrChar>{currChar}</CurrChar>
-      <span>{trailingText}</span>
-    </p>
+    <S.Container>
+      <S.WordsContainer>
+        {Object.keys(words).map((word: string) => (
+          <S.StyledWord key={word} word={word} wordState={words[word]} />
+        ))}
+      </S.WordsContainer>
+      <S.TextInput
+        value={inputText}
+        onChange={handleKeyDown}
+        type="text"
+        ref={(el) => el?.focus()}
+      />
+    </S.Container>
   );
 }

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 
 import "./App.css";
 import { Statistics } from "./components/statistics";
-import { Timer } from "./components/timer";
+import Timer from "./components/timer";
 import { TypeTest } from "./components/type-test";
 import { useTypeTest } from "./hooks/useTypeTest";
 import { WORD_BANK } from "./word-bank";
@@ -30,15 +30,19 @@ const shuffledWords = WORD_BANK.sort(() => Math.random() - Math.random()).join(
 const GAME_TIME = 10;
 
 function App() {
-  const { currChar, trailingText, leadingText, typos, correctCount } =
-    useTypeTest(shuffledWords);
-
   const [isGameOver, setIsGameOver] = useState(false);
+
+  const { currChar, trailingText, leadingText, typos, correctCount } =
+    useTypeTest(shuffledWords, isGameOver);
+
+  const handleGameOver = useCallback(() => {
+    setIsGameOver(true);
+  }, []);
 
   return (
     <Container>
       {!isGameOver && (
-        <Timer seconds={GAME_TIME} onTimerEnded={() => setIsGameOver(true)} />
+        <Timer seconds={GAME_TIME} onTimerEnded={handleGameOver} />
       )}
       {isGameOver ? (
         <Statistics typos={typos} correctCount={correctCount} />

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-export function useTypeTest(testText: string) {
+export function useTypeTest(testText: string, isGameOver: boolean) {
   const [leadingText, setLeadingText] = useState("");
   const [currChar, setCurrChar] = useState(testText.charAt(0));
   const [trailingText, setTrailingText] = useState(testText.substring(1));
@@ -46,10 +46,12 @@ export function useTypeTest(testText: string) {
   );
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
+    if (!isGameOver) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
 
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
+  }, [handleKeyDown, isGameOver]);
 
   return { leadingText, currChar, trailingText, typos, correctCount };
 }

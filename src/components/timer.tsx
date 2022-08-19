@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, memo, useState } from "react";
 import styled from "styled-components";
 
 interface TimerProps {
@@ -18,7 +17,7 @@ const TimerContainer = styled.div({
 
 let date = new Date();
 
-export function Timer({ seconds, onTimerEnded }: TimerProps) {
+function Timer({ seconds, onTimerEnded }: TimerProps) {
   const [currTime, setCurrTime] = useState(seconds);
 
   useEffect(() => {
@@ -36,7 +35,9 @@ export function Timer({ seconds, onTimerEnded }: TimerProps) {
     }
 
     return () => clearInterval(timer);
-  }, [currTime, onTimerEnded, seconds]);
+  }, [currTime, seconds, onTimerEnded]);
 
   return <TimerContainer>Time: {currTime}</TimerContainer>;
 }
+
+export default memo(Timer);

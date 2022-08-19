@@ -24,8 +24,6 @@ export function useTypeTest(testText: string, isGameOver: boolean) {
         );
 
         updatedCurrChar = trailingText.charAt(trailingText.indexOf(" ") + 1);
-
-        setTypos((old) => old + 1);
       } else if (event.key === currChar) {
         updatedLeadingText = leadingText + currChar;
         updatedCurrChar = trailingText.charAt(0);

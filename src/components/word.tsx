@@ -1,18 +1,20 @@
-import styled from "styled-components";
+import { memo } from "react";
 
-enum WordStates {
+export enum WordStates {
   Correct,
   InProgress,
   Error,
+  Pending,
 }
 
 interface WordProps {
   word: string;
-  wordState: WordStates;
+  wordState?: WordStates;
+  className?: string;
 }
 
-const WordContainer = styled.span({});
-
-export function Word({ word, wordState }: WordProps) {
-  return <WordContainer>{word}</WordContainer>;
+function Word({ className, word, wordState }: WordProps) {
+  return <span className={className}>{word}</span>;
 }
+
+export default memo(Word);

@@ -5,6 +5,7 @@ import "./App.css";
 import { Statistics } from "./components/statistics";
 import Timer from "./components/timer";
 import { TypeTest } from "./components/type-test";
+import { WordStates } from "./components/word";
 import { useTypeTest } from "./hooks/useTypeTest";
 import { WORD_BANK } from "./word-bank";
 
@@ -23,17 +24,19 @@ const Container = styled.div({
   padding: "10px",
 });
 
-const shuffledWords = WORD_BANK.sort(() => Math.random() - Math.random()).join(
-  " "
-);
+const shuffledWords = WORD_BANK.sort(
+  () => Math.random() - Math.random()
+).reduce((acc: any, curr: string) => {
+  acc[curr] = WordStates.Pending;
+  return acc;
+}, {});
 
-const GAME_TIME = 10;
+shuffledWords[Object.keys(shuffledWords)[0]] = WordStates.InProgress;
+
+const GAME_TIME = 60;
 
 function App() {
   const [isGameOver, setIsGameOver] = useState(false);
-
-  const { currChar, trailingText, leadingText, typos, correctCount } =
-    useTypeTest(shuffledWords, isGameOver);
 
   const handleGameOver = useCallback(() => {
     setIsGameOver(true);
@@ -42,15 +45,11 @@ function App() {
   return (
     <Container>
       {isGameOver ? (
-        <Statistics typos={typos} correctCount={correctCount} />
+        <Statistics words={shuffledWords}></Statistics>
       ) : (
         <>
           <Timer seconds={GAME_TIME} onTimerEnded={handleGameOver} />
-          <TypeTest
-            currChar={currChar}
-            trailingText={trailingText}
-            leadingText={leadingText}
-          />
+          <TypeTest words={shuffledWords} />
         </>
       )}
     </Container>
